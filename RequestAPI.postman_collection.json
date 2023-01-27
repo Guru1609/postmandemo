@@ -1,0 +1,253 @@
+{
+	"info": {
+		"_postman_id": "c2fb85d8-17c8-4803-912d-b1aa6288638a",
+		"name": "RequestAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24324805"
+	},
+	"item": [
+		{
+			"name": "Get Data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"validating status code\"] = responseCode.code ==200;\r",
+							"tests[\"validating Id\"] = responseBody.has(\"7\");\r",
+							"tests[\"validating firstname\"] = responseBody.has(\"Michael\");\r",
+							"tests[\"validating email\"] = responseBody.has(\"michael.lawson@reqres.in\");\r",
+							"\r",
+							"var response = JSON.parse(responseBody); //this is the java script code postman support this one \r",
+							"tests[\"total_page\"] = response.page == 2;\r",
+							"tests[\"page\"] = response.page == 2;\r",
+							"\r",
+							"postman.setNextRequest(\"Create New User\");\r",
+							"\r",
+							"//tests this is only key word\r",
+							"//var response meanns we have created one variable \r",
+							"//path parameter gives you data from server\r",
+							"//query parameter will filter the data"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/users?page=2",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create New User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"validating status code\"] = responseCode.code ==201;\r",
+							"tests[\"validating name\"] = responseBody.has(\"Harsh\");\r",
+							"tests[\"validating job\"] = responseBody.has(\"Developer\");\r",
+							"tests[\"validating Id\"] = responseBody.has(\"288\"); // this will be fail becaused every send request ID will changed \r",
+							"\r",
+							"postman.setNextRequest(\"PutRequest\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Harsh\",\r\n    \"job\": \"Developer\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/users",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PutRequest",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"postman.setNextRequest(\"Singleuserdata\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Don\",\r\n    \"job\": \"Developer\"\r\n}"
+				},
+				"url": {
+					"raw": "{{url}}/users/2",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Singleuserdata",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//this will fatch data from whole table that's why we can't use this code \r",
+							"//tests[\"validating firstname\"] = responseBody.has(\"Emma\");\r",
+							"//tests[\"validating lastname\"] = responseBody.has(\"Wong\");\r",
+							"\r",
+							"var response = JSON.parse(responseBody);\r",
+							"tests[\"validating firstname\"] = response.data.first_name == \"Janet\";\r",
+							"tests[\"validating lastname\"] = response.data.last_name == \"Weaver\";\r",
+							"\r",
+							"postman.setNextRequest(\"LogInApi\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/users/2",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LogInApi",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"validating Token\"] = responseBody.has(\"token\");\r",
+							"\r",
+							"postman.setNextRequest(\"null\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"eve.holt@reqres.in\",\r\n    \"password\": \"cityslicka\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/users/3",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						"3"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "https://reqres.in/api"
+		}
+	]
+}
